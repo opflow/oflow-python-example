@@ -6,28 +6,10 @@ import signal
 import threading
 import opflow
 import sys
-import getopt
 
-def args_parser(argv):
-    amqp_uri = 'master:zaq123edcx@192.168.56.56'
-    number = None
-    help_message = 'fibonacci_rpc_master.py -u <amqp_uri> -n <number>'
-    try:
-        opts, args = getopt.getopt(argv,"hu:n:",["uri=","number="])
-    except getopt.GetoptError:
-        print help_message
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt == '-h':
-            print help_message
-            sys.exit(0)
-        elif opt in ("-u", "--uri"):
-            amqp_uri = arg
-        elif opt in ("-n", "--number"):
-            number = int(arg)
-    return {'uri': amqp_uri, 'number': number }
+from misc import Misc
 
-cmdargs = args_parser(sys.argv[1:])
+cmdargs = Misc.args_parser(sys.argv[1:], 'rpc_master')
 
 master = opflow.RpcMaster(**{
 	'uri': 'amqp://%s/' % cmdargs['uri'],

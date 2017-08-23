@@ -6,9 +6,12 @@ import sys
 import opflow
 
 from fibonacci_generator import FibonacciGenerator
+from misc import Misc
+
+cmdargs = Misc.args_parser(argv=sys.argv[1:], cmd_name='subscriber', has_number=False)
 
 subscriber = opflow.PubsubHandler(**{
-    'uri': 'amqp://master:zaq123edcx@192.168.56.56/',
+    'uri': 'amqp://%s/' % cmdargs['uri'],
     'exchangeName': 'tdd-opflow-publisher',
     'routingKey': 'tdd-opflow-pubsub-public',
     'subscriberName': 'tdd-opflow-subscriber',
@@ -18,14 +21,27 @@ subscriber = opflow.PubsubHandler(**{
 
 def listener(body, headers):
     data = json.loads(body)
-    print("[x] input: %s" % (data))
-    if (data['number'] == 30): raise Exception()
+
+    if 'number' not in data:
+        print('[+] invalid input data')
+        raise opflow.OperationError('Invalid input data')
+
+    print("[x] fibonacci(%s)" % (data['number']))
+    
+    if data['number'] < 0:
+        print('[-] number should be positive')
+        raise opflow.OperationError('The number should be positive')
+
+    if data['number'] > 40:
+        print('[-] number is greater than 40')
+        raise opflow.OperationError('The number exceeding limit (40)')
+
     fg = FibonacciGenerator(data['number'])
     print("[-] result: %s" % json.dumps(fg.finish()))
 
 subscriber.subscribe(listener)
 
-print(' [*] Waiting for message. To exit press CTRL+C')
+print('[*] Waiting for message. To exit press CTRL+C')
 
 def signal_term_handler(signal, frame):
     print 'SIGTERM/SIGINT'
@@ -37,4 +53,4 @@ signal.signal(signal.SIGTERM, signal_term_handler)
 
 subscriber.retain()
 
-print(' [*] Exit!')
+print('[*] Exit!')

@@ -6,11 +6,12 @@ import signal
 import sys
 
 from fibonacci_generator import FibonacciGenerator
+from misc import Misc
 
-amqp_address = 'localhost' if len(sys.argv) < 2 else sys.argv[1]
+cmdargs = Misc.args_parser(argv=sys.argv[1:], cmd_name='rpc_worker', has_number=False)
 
 worker = opflow.RpcWorker(**{
-    'uri': 'amqp://%s/' % amqp_address,
+    'uri': 'amqp://%s/' % cmdargs['uri'],
     'exchangeName': 'tdd-opflow-exchange',
     'routingKey': 'tdd-opflow-rpc',
     'operatorName': 'tdd-opflow-queue',

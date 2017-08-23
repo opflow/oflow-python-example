@@ -4,21 +4,22 @@ import json
 import sys
 import opflow
 
-from fibonacci_generator import FibonacciGenerator
+from misc import Misc
+
+cmdargs = Misc.args_parser(sys.argv[1:], 'publisher')
 
 publisher = opflow.PubsubHandler(**{
-    'uri': 'amqp://master:zaq123edcx@192.168.56.56/',
+    'uri': 'amqp://%s/' % cmdargs['uri'],
     'exchangeName': 'tdd-opflow-publisher',
     'routingKey': 'tdd-opflow-pubsub-public',
     'applicationId': 'FibonacciGenerator'
 })
 
-if len(sys.argv) < 2:
+if cmdargs['number'] is None:
     for i in range(20, 40):
         publisher.publish(json.dumps({ 'number': i }))
 else:
-    number = int(sys.argv[1])
-    print '[+] number: %s' % number
-    publisher.publish(json.dumps({ 'number': number }))
+    print '[+] number: %s' % cmdargs['number']
+    publisher.publish(json.dumps({ 'number': cmdargs['number'] }))
 
 print(' [*] Exit!')
