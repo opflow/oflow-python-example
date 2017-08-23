@@ -5,8 +5,8 @@ import sys, getopt
 class Misc(object):
     @classmethod
     def args_parser(cls, argv, cmd_name, has_number=True):
-        result = { 'uri': 'master:zaq123edcx@192.168.56.56' }
-        help_message = '%s.py -u <uri>' % cmd_name
+        result = { 'uri': 'localhost' }
+        help_message = 'python %s -u <uri>' % cmd_name
         short_opts = 'hu:'
         long_opts = ["uri="]
         if has_number:

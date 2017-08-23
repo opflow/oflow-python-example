@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 import json
+import opflow
 import signal
 import sys
-import opflow
 
-from fibonacci_generator import FibonacciGenerator
+from fibonacci import FibonacciGenerator
 from misc import Misc
 
-cmdargs = Misc.args_parser(argv=sys.argv[1:], cmd_name='subscriber', has_number=False)
+cmdargs = Misc.args_parser(argv=sys.argv[1:], cmd_name=sys.argv[0], has_number=False)
 
 subscriber = opflow.PubsubHandler(**{
     'uri': 'amqp://%s/' % cmdargs['uri'],

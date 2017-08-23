@@ -9,7 +9,7 @@ import sys
 
 from misc import Misc
 
-cmdargs = Misc.args_parser(sys.argv[1:], 'rpc_master')
+cmdargs = Misc.args_parser(sys.argv[1:], cmd_name=sys.argv[0])
 
 master = opflow.RpcMaster(**{
 	'uri': 'amqp://%s/' % cmdargs['uri'],

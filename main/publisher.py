@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 import json
-import sys
 import opflow
+import sys
 
 from misc import Misc
 
-cmdargs = Misc.args_parser(sys.argv[1:], 'publisher')
+cmdargs = Misc.args_parser(sys.argv[1:], cmd_name=sys.argv[0])
 
 publisher = opflow.PubsubHandler(**{
     'uri': 'amqp://%s/' % cmdargs['uri'],
